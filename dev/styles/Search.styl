@@ -1,0 +1,63 @@
+$namespace = ".search";
+$btnDims = 50px;
+
+{$namespace} {
+  min-width: 390px;
+  max-width: 800px;
+  white-space: nowrap;
+  
+  &__logo-link,
+  &__bar {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  
+  &__logo-link {
+    width: 18%;
+    min-width: 65px;
+  }
+  
+  &__logo {
+    width: 100%;
+  }
+  
+  &__bar {
+    min-width: 78%;
+    height: 50px;
+    border: 1px solid #c0c0c0;
+    margin-left: 2%;
+    background-color: #fff;
+  }
+
+  &__input {
+    width: "calc(100% - %s)" % $btnDims;
+    height: 48px;
+    padding: 0 0 0 16px;
+    border: medium none;
+    background: transparent;
+    display: block;
+    float: left;
+  }
+
+  &__btn {
+    width: $btnDims;
+    height: $btnDims;
+    margin-top: -1px;
+    background-color: #0062b2;
+    border: medium none;
+    cursor: pointer;
+    right: -46px;
+    top: -1px;
+    float: right;
+    
+    &::before {
+      content: '';
+      width: 25px;
+      height: 26px;
+      margin-left: 7px;
+      background-image: url("/imgs/icon-glass.png");
+      background-repeat: no-repeat;
+      display: block;
+    }
+  }
+}
