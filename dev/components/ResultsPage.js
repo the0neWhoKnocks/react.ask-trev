@@ -5,7 +5,7 @@ import Search from './Search.js';
 
 export default class ResultsPage extends React.Component {
   render() {
-    var query = this.props.params.query;
+    const query = this.props.params.query;
     
     return (
       <div className="page__results">
