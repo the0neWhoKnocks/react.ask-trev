@@ -12,9 +12,9 @@ function handleQuerySubmit(nextState, replace) {
     nextState.location.state
     && nextState.location.action !== 'REPLACE'
   ){
-    var token = "_query_";
-    var query = nextState.location.state.body.query;
-    var oldURL = nextState.location.pathname;
+    const token = "_query_";
+    const query = nextState.location.state.body.query;
+    let oldURL = nextState.location.pathname;
     
     replace(oldURL.replace(token, query));
   }
