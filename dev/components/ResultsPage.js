@@ -2,6 +2,7 @@ import React from 'react';
 
 import css from '../styles/ResultsPage.styl';
 import Search from './Search.js';
+import ResultsListContainer from './ResultsListContainer.js';
 
 export default class ResultsPage extends React.Component {
   render() {
@@ -10,8 +11,7 @@ export default class ResultsPage extends React.Component {
     return (
       <div className="page__results">
         <Search query={query} />
-        
-        <h1>Results</h1>
+        <ResultsListContainer query={query} />
       </div>
     );
   }
