@@ -14,16 +14,15 @@ export default class ResultsListContainer extends React.Component {
   
   static get defaultProps(){
     return {
-      query: '',
       resultsSource: '/data.json'
     };
   }
   
   getResults(){
     const query = this.props.query;
+    let _self = this;
     
     if( query !== '' ){
-      let _self = this;
       let req = new Request(this.props.resultsSource);
       
       fetch(req)
@@ -64,7 +63,7 @@ export default class ResultsListContainer extends React.Component {
           });
         });
     }else{
-      console.error('[ ERROR ] No query entered');
+      console.warn('[ WARN ] No query entered');
           
       _self.setState({
         status: 'error',

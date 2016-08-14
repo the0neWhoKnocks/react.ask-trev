@@ -9,23 +9,22 @@ export default class ResultsList extends React.Component {
   }
   
   render(){
-    let resultsMessage = 'Loading Results';
+    let resultsMessage = {
+      __html: 'Loading Results'
+    };
     let resultsMarkup = '';
+    const { query, results } = this.props;
     
     switch(this.props.status){
       case 'error' :
-        resultsMessage = `No results found for &quot;${this.props.query}&quot;`;
+        resultsMessage.__html = `No results found for &quot;${query}&quot;`;
         break;
       
       case 'success' :
-        resultsMessage = (
-          <h2>
-            Results for <span className="results-list__query">&quot;{this.props.query}&quot;</span>
-          </h2>
-        );
+        resultsMessage.__html = `Results for <span className="results-list__query">&quot;${query}&quot;</span>`;
         resultsMarkup = (
           <ul className="results-list__items">
-            {this.props.results.map(this.renderResult, this)}
+            {results.map(this.renderResult, this)}
           </ul>
         );
         break;
@@ -33,7 +32,7 @@ export default class ResultsList extends React.Component {
     
     return (
       <div className="results-list">
-        {resultsMessage}
+        <h2 dangerouslySetInnerHTML={resultsMessage} />
         {resultsMarkup}
       </div>
     );

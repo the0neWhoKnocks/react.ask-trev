@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router';
-import Form from 'react-router-form';
 
 import css from '../styles/SearchPage.styl';
 import Search from './Search.js';
@@ -15,7 +14,7 @@ export default class SearchPage extends React.Component {
   render() {
     return (
       <div className="page__search">
-        <Search/>
+        <Search {...this.props}/>
       </div>
     );
   }

@@ -22,18 +22,28 @@ module.exports = {
   ],
   module: {
     loaders: [
-    // js
-    {
-      test: /\.js$/,
-      loaders: ['babel'],
-      include: path.join(__dirname, DEV)
-    },
-    // CSS
-    { 
-      test: /\.styl$/, 
-      include: path.join(__dirname, DEV),
-      loader: 'style-loader!css-loader!stylus-loader'
-    }
+      // js
+      {
+        test: /\.js$/,
+        loaders: ['babel'],
+        include: path.join(__dirname, DEV)
+      },
+      // CSS
+      { 
+        test: /\.styl$/, 
+        include: path.join(__dirname, DEV),
+        loader: 'style-loader!css-loader!stylus-loader'
+      },
+      // JSON
+      { 
+        test: /\.json$/, 
+        loader: 'json' 
+      },
+      // add libs to window
+      { 
+        test: require.resolve('react'), 
+        loader: 'expose?React'
+      }
     ]
   }
 };

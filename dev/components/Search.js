@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router';
-import Form from 'react-router-form';
 
 import css from '../styles/Search.styl';
 
@@ -11,25 +10,50 @@ export default class Search extends React.Component {
     };
   }
   
+  handleQuerySubmit(ev){
+    ev.preventDefault();
+    
+    const query = this.refs.queryInput.value;
+    const action = ev.target.getAttribute('action');
+    
+    this.props.submitQuery(query);
+    this.props.history.push(`${action}/${query}`);
+  }
+  
+  componentDidMount(){
+    this.refs.queryInput.focus(); 
+  }
+  
   render() {
+    const {placeholder} = this.props;
+    // TODO - figure out how to set default state for query based on param in `store.js`
+    const query = ( this.props.query === '' )
+      ? this.props.params.query
+      : this.props.query;
+    
     return (
       <div className="search">
         <Link className="search__logo-link" to="/">
           <img className="search__logo" src="/imgs/logo.png" alt="Ask Trev Logo" />
         </Link>
         <div className="search__bar">
-          <Form to="/page/results/_query_" method="POST">
+          <form 
+            action="/page/results" 
+            method="POST"
+            onSubmit={this.handleQuerySubmit.bind(this)}
+          >
             <input 
               type="text" 
               id="searchBox" 
               className="search__input"  
               name="query"
               autoComplete="off"
-              placeholder={this.props.placeholder}
-              defaultValue={ this.props.query || '' }
+              placeholder={placeholder}
+              defaultValue={query}
+              ref="queryInput"
             />
             <button className="search__btn"></button>
-          </Form>
+          </form>
         </div>
       </div>
     );
