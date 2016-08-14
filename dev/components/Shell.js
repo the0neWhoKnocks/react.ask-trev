@@ -1,5 +1,7 @@
 import React from 'react';
 
+import css from '../styles/base.styl';
+
 export let themes = {
   DEFAULT: 'default',
   DARK: 'dark'
