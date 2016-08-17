@@ -26,10 +26,7 @@ export default class Search extends React.Component {
   
   render() {
     const {placeholder} = this.props;
-    // TODO - figure out how to set default state for query based on param in `store.js`
-    const query = ( this.props.query === '' )
-      ? this.props.params.query
-      : this.props.query;
+    const query = this.props.query;
     
     return (
       <div className="search">

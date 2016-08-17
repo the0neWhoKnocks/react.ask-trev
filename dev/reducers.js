@@ -1,11 +1,38 @@
-import {combineReducers } from 'redux';
-import {routerReducer } from 'react-router-redux';
+import { combineReducers } from 'redux';
+import { routerReducer } from 'react-router-redux';
 
-function autoComplete(state = [], action){
+import resultsData from '../public/data.json';
+
+function getAutoCompleteVals({title}){
+  return title;
+}
+
+export const defaultState = {
+  autoComplete: resultsData.results.map(getAutoCompleteVals),
+  query: '',
+  results: [],
+  resultsStatus: 'loading'
+};
+
+/**
+ * Maps state props to component props so you don't have to pass props
+ * down the component chain.
+ */
+export function mapStateToProps(state, ownProps){
+  let newState = Object.assign({}, defaultState, state);
+  
+  // handles first load
+  if( newState.query === '' ) newState.query = ownProps.params.query;
+  
+  return newState;
+}
+
+
+function autoComplete(state = defaultState.autoComplete, action){
   return state;
 }
 
-function query(state = '', action){
+function query(state = defaultState.query, action){
   switch(action.type){
     case 'SUBMIT_QUERY' :
       console.log('[ SUBMIT_QUERY ]', action.text);
@@ -16,14 +43,41 @@ function query(state = '', action){
   }
 }
 
-function results(state = [], action){
-  return state;
+function results(state = defaultState.results, action){
+  switch(action.type){
+    case 'RESULTS_SUCCESS' :
+      console.log('[ RESULTS_SUCCESS ]', action.results);
+      return action.results;
+      
+    default :
+      return state;
+  }
+}
+
+function resultsStatus(state = defaultState.resultsStatus, action){
+  switch(action.type){
+    case 'RESULTS_LOADING' :
+      console.log('[ RESULTS_LOADING ]');
+      return 'loading';
+    
+    case 'RESULTS_SUCCESS' :
+      console.log('[ RESULTS_SUCCESS ]');
+      return 'success';
+    
+    case 'RESULTS_ERROR' :
+      console.log('[ RESULTS_ERROR ]');
+      return 'error';
+      
+    default :
+      return state;
+  }
 }
 
 const reducers = combineReducers({
   autoComplete,
   query,
   results,
+  resultsStatus,
   routing: routerReducer
 });
 

@@ -3,15 +3,6 @@ import React from 'react';
 import ResultsList from './ResultsList.js';
 
 export default class ResultsListContainer extends React.Component {
-  constructor(){
-    super();
-    
-    this.state = {
-      status: 'loading',
-      results: []
-    };
-  }
-  
   static get defaultProps(){
     return {
       resultsSource: '/data.json'
@@ -25,15 +16,13 @@ export default class ResultsListContainer extends React.Component {
     if( query !== '' ){
       let req = new Request(this.props.resultsSource);
       
+      this.props.resultsLoading();
+      
       fetch(req)
         .then(function(resp){
           if(resp.status !== 200 ){
             console.error('[ ERROR ]', resp.status, "Couldn't retrieve results.");
-            
-            _self.setState({
-              status: 'error',
-              results: []
-            });
+            _self.props.resultsError();
           }
 
           resp.json().then(function(data){
@@ -48,27 +37,16 @@ export default class ResultsListContainer extends React.Component {
               }
             }
             
-            _self.setState({
-              status: 'success',
-              results: resultItems
-            });
+            _self.props.resultsSuccess(resultItems);
           });
         })
         .catch(function(err){
           console.error('[ ERROR ]', err);
-          
-          _self.setState({
-            status: 'error',
-            results: []
-          });
+          _self.props.resultsError();
         });
     }else{
       console.warn('[ WARN ] No query entered');
-          
-      _self.setState({
-        status: 'error',
-        results: []
-      });
+      _self.props.resultsError();
     }
   }
   
@@ -85,8 +63,8 @@ export default class ResultsListContainer extends React.Component {
   render(){
     return (
       <ResultsList 
-        results={this.state.results}
-        status={this.state.status}
+        results={this.props.results}
+        status={this.props.resultsStatus}
         query={this.props.query}
       />
     );

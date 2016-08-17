@@ -4,19 +4,13 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import { Provider, connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import { mapStateToProps } from './reducers.js';
 import store, { history } from './store.js';
 import * as actions from './actions.js';
 import { Shell, themes } from './components/Shell.js';
 import SearchPage from './components/SearchPage.js';
 import ResultsPage from './components/ResultsPage.js';
 
-function mapStateToProps(state){
-  return {
-    autoComplete: state.autoComplete,
-    query: state.query,
-    results: state.query
-  };
-}
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators(actions, dispatch);
