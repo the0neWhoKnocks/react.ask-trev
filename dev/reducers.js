@@ -35,7 +35,7 @@ function autoComplete(state = defaultState.autoComplete, action){
 function query(state = defaultState.query, action){
   switch(action.type){
     case 'SUBMIT_QUERY' :
-      console.log('[ SUBMIT_QUERY ]', action.text);
+      console.log('[ REDUCER query ]', action.text);
       return action.text;
       
     default :
@@ -46,7 +46,7 @@ function query(state = defaultState.query, action){
 function results(state = defaultState.results, action){
   switch(action.type){
     case 'RESULTS_SUCCESS' :
-      console.log('[ RESULTS_SUCCESS ]', action.results);
+      console.log('[ REDUCER results ]', action.results);
       return action.results;
       
     default :
@@ -57,15 +57,15 @@ function results(state = defaultState.results, action){
 function resultsStatus(state = defaultState.resultsStatus, action){
   switch(action.type){
     case 'RESULTS_LOADING' :
-      console.log('[ RESULTS_LOADING ]');
+      console.log('[ REDUCER resultsStatus ] loading');
       return 'loading';
     
     case 'RESULTS_SUCCESS' :
-      console.log('[ RESULTS_SUCCESS ]');
+      console.log('[ REDUCER resultsStatus ] success');
       return 'success';
     
     case 'RESULTS_ERROR' :
-      console.log('[ RESULTS_ERROR ]');
+      console.log('[ REDUCER resultsStatus ] error');
       return 'error';
       
     default :
