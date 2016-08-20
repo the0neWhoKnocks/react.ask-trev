@@ -48,7 +48,7 @@ function query(state = defaultState.query, action){
 
 function results(state = defaultState.results, action){
   switch(action.type){
-    case 'RESULTS_SUCCESS' :
+    case 'DATA_SUCCESS' :
       console.log('[ REDUCER results ]', action.results);
       return action.results;
       
@@ -59,15 +59,15 @@ function results(state = defaultState.results, action){
 
 function resultsStatus(state = defaultState.resultsStatus, action){
   switch(action.type){
-    case 'RESULTS_LOADING' :
+    case 'DATA_LOADING' :
       console.log('[ REDUCER resultsStatus ] loading');
       return 'loading';
     
-    case 'RESULTS_SUCCESS' :
+    case 'DATA_SUCCESS' :
       console.log('[ REDUCER resultsStatus ] success');
       return 'success';
     
-    case 'RESULTS_ERROR' :
+    case 'DATA_ERROR' :
       console.log('[ REDUCER resultsStatus ] error');
       return 'error';
       
