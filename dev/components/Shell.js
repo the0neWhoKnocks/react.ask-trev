@@ -1,6 +1,7 @@
 import React from 'react';
 
 import css from '../styles/base.styl';
+import AdminNav from './AdminNav.js';
 
 export let themes = {
   DEFAULT: 'default',
@@ -17,6 +18,7 @@ export class Shell extends React.Component {
   render() {
     return (
       <div className={this.props.theme}>
+        <AdminNav {...this.props} />
         {React.cloneElement(this.props.children, this.props)}
       </div>
     );

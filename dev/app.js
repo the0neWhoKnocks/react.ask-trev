@@ -8,6 +8,7 @@ import { mapStateToProps } from './reducers.js';
 import store, { history } from './store.js';
 import * as actions from './actions.js';
 import { Shell, themes } from './components/Shell.js';
+import AdminPage from './components/AdminPage.js';
 import SearchPage from './components/SearchPage.js';
 import ResultsPage from './components/ResultsPage.js';
 
@@ -25,7 +26,11 @@ const router = (
         <IndexRoute component={SearchPage} />
         <Route 
           component={ResultsPage} 
-          path="/page/results(/:query)"
+          path="/results(/:query)"
+        />
+        <Route 
+          component={AdminPage} 
+          path="/admin"
         />
       </Route>
     </Router>
