@@ -11,6 +11,7 @@ export default class ResultsPage extends React.Component {
         <DataContainer
           {...this.props}
           component={QAList}
+          noFilter={true}
         />
       </div>
     );
