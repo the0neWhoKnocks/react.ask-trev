@@ -22,7 +22,10 @@ export function mapStateToProps(state, ownProps){
   let newState = Object.assign({}, defaultState, state);
   
   // handles first load
-  if( newState.query === '' ) newState.query = ownProps.params.query;
+  if( 
+    newState.query === ''
+    && ownProps.params.query
+  ) newState.query = ownProps.params.query;
   
   return newState;
 }
@@ -35,7 +38,7 @@ function autoComplete(state = defaultState.autoComplete, action){
 function query(state = defaultState.query, action){
   switch(action.type){
     case 'SUBMIT_QUERY' :
-      console.log('[ REDUCER query ]', action.text);
+      console.log('[ REDUCER query ]', action.text || '');
       return action.text;
       
     default :

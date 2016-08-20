@@ -35,7 +35,7 @@ export default class Search extends React.Component {
         </Link>
         <div className="search__bar">
           <form 
-            action="/page/results" 
+            action="/results" 
             method="POST"
             onSubmit={this.handleQuerySubmit.bind(this)}
           >
