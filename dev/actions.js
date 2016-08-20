@@ -5,21 +5,21 @@ export function submitQuery(text){
   }
 }
 
-export function resultsLoading(){
+export function dataLoading(){
   return {
-    type: 'RESULTS_LOADING'
+    type: 'DATA_LOADING'
   }
 }
 
-export function resultsSuccess(results){
+export function dataSuccess(results){
   return {
-    type: 'RESULTS_SUCCESS',
+    type: 'DATA_SUCCESS',
     results
   }
 }
 
-export function resultsError(){
+export function dataError(){
   return {
-    type: 'RESULTS_ERROR'
+    type: 'DATA_ERROR'
   }
 }
