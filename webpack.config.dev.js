@@ -1,5 +1,6 @@
 var path = require('path');
 var webpack = require('webpack');
+var poststylus = require('poststylus');
 
 var DEV = 'dev';
 var PUBLIC = 'public';
@@ -44,6 +45,11 @@ module.exports = {
         test: require.resolve('react'), 
         loader: 'expose?React'
       }
+    ]
+  },
+  stylus: {
+    use: [
+      poststylus([ 'autoprefixer' ])
     ]
   }
 };

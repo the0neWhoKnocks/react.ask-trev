@@ -6,6 +6,8 @@ import QAListItem from './QAListItem.js';
 export default class QAList extends React.Component {
   constructor(props) {
     super(props);
+    
+    this.ids = [];
   }
   
   render(){
@@ -21,6 +23,10 @@ export default class QAList extends React.Component {
         break;
       
       case 'success' :
+        this.ids = results.map(function(item){
+          return item.id;
+        });
+        
         resultsMarkup = (
           <ul className="qa-list__items">
             {results.map(this.renderResult, this)}
@@ -36,10 +42,12 @@ export default class QAList extends React.Component {
     );
   }
   
-  renderResult({title, body}, ndx){
+  renderResult({title, body, id}, ndx){
     return (
       <QAListItem
-        key={ndx}
+        key={id}
+        id={id}
+        ids={this.ids}
         title={title}
         body={body}
       />
