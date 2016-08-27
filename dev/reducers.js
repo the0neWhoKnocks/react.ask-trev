@@ -11,7 +11,8 @@ export const defaultState = {
   autoComplete: resultsData.results.map(getAutoCompleteVals),
   query: '',
   results: [],
-  resultsStatus: 'loading'
+  resultsStatus: 'loading',
+  createItem: false
 };
 
 /**
@@ -36,9 +37,11 @@ function autoComplete(state = defaultState.autoComplete, action){
 }
 
 function query(state = defaultState.query, action){
+  const logPrefix = '[ REDUCER query ]';
+  
   switch(action.type){
     case 'SUBMIT_QUERY' :
-      console.log('[ REDUCER query ]', action.text || '');
+      console.log(logPrefix, action.text || '');
       return action.text;
       
     default :
@@ -47,10 +50,19 @@ function query(state = defaultState.query, action){
 }
 
 function results(state = defaultState.results, action){
+  const logPrefix = '[ REDUCER results ]';
+  
   switch(action.type){
     case 'DATA_SUCCESS' :
-      console.log('[ REDUCER results ]', action.results);
+      console.log(logPrefix, action.results);
       return action.results;
+      
+    case 'ITEM_SAVE' :
+      let results = state.slice(0);
+      results.push(action.item);
+      
+      console.log(logPrefix, results);
+      return results;
       
     default :
       return state;
@@ -58,18 +70,38 @@ function results(state = defaultState.results, action){
 }
 
 function resultsStatus(state = defaultState.resultsStatus, action){
+  const logPrefix = '[ REDUCER resultsStatus ]';
+  
   switch(action.type){
     case 'DATA_LOADING' :
-      console.log('[ REDUCER resultsStatus ] loading');
+      console.log(logPrefix, 'loading');
       return 'loading';
     
     case 'DATA_SUCCESS' :
-      console.log('[ REDUCER resultsStatus ] success');
+      console.log(logPrefix, 'success');
       return 'success';
     
     case 'DATA_ERROR' :
-      console.log('[ REDUCER resultsStatus ] error');
+      console.log(logPrefix, 'error');
       return 'error';
+      
+    default :
+      return state;
+  }
+}
+
+function createItem(state = defaultState.createItem, action){
+  const logPrefix = '[ REDUCER createItem ]';
+  
+  switch(action.type){
+    case 'ITEM_CREATE' :
+      console.log(logPrefix, true);
+      return true;
+    
+    case 'ITEM_SAVE' :
+    case 'ITEM_CANCEL_CREATE' :
+      console.log(logPrefix, false);
+      return false;
       
     default :
       return state;
@@ -81,6 +113,7 @@ const reducers = combineReducers({
   query,
   results,
   resultsStatus,
+  createItem,
   routing: routerReducer
 });
 

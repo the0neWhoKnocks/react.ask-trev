@@ -17,6 +17,7 @@
   - [ ] view - Create/Edit
   - [ ] Save to exterior DB if online
   - [ ] Save to local DB if offline
+    - [ ] Look into Service Workers for this
   - [ ] When loading data, do a diff with offline/online data. Set a date for
   each Q&A, diff those dates and prompt the user to choose which to keep so
   there are no unintended losses in data.

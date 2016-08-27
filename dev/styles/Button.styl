@@ -1,0 +1,40 @@
+$namespace = ".btn";
+$col_primary = #ddd;
+$col_primary_hov = #eee;
+$padding_vert = 0.5em;
+$padding_horz = 1em;
+
+{$namespace} {
+  text-transform: uppercase;
+  padding: $padding_vert $padding_horz;
+  border: solid 1px;
+  cursor: pointer;
+  background: $col_primary;
+  
+  &:hover {
+    background: $col_primary_hov;
+  }
+  
+  &__icon {
+    display: none;
+  }
+  
+  &.has--icon {
+    padding: 0;
+    
+    {$namespace} {
+      &__icon,
+      &__body {
+        display: inline-block;
+      }
+      
+      &__icon {
+        padding: $padding_vert $padding_vert $padding_vert $padding_horz;
+      }
+      
+      &__body {
+        padding: $padding_vert $padding_horz $padding_vert 0;
+      }
+    }
+  }
+}

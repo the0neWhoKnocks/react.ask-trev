@@ -23,3 +23,16 @@ export function dataError(){
     type: 'DATA_ERROR'
   }
 }
+
+export function itemCreate(){
+  return {
+    type: 'ITEM_CREATE'
+  }
+}
+
+export function itemSave(item){
+  return {
+    type: 'ITEM_SAVE',
+    item
+  }
+}
