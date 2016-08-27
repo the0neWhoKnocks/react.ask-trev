@@ -1,0 +1,21 @@
+$namespace = ".qa-nav";
+$margin = 2em;
+$col_primary = #eee;
+
+{$namespace} {
+  text-align: right;
+  background: $col_primary;
+  
+  &.is--top,
+  &.is--btm {
+    border: none;
+  }
+  
+  &.is--top {
+    margin-bottom: $margin;
+  }
+  
+  &.is--btm {
+    margin-top: $margin;
+  }
+}

@@ -103,15 +103,8 @@ export default class DataContainer extends React.Component {
   }
   
   render(){
-    let componentProps = {
-      results: this.props.results,
-      status: this.props.resultsStatus
-    };
-    
-    if( this.props.query ) componentProps.query = this.props.query;
-    
     return (
-      <this.props.component {...componentProps}/>
+      <this.props.component {...this.props}/>
     );
   }
 }

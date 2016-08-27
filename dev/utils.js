@@ -12,6 +12,6 @@ module.exports = {
       hash |= 0; // Convert to 32bit integer
     }
     
-    return hash;
+    return ''+hash;
   }
 };

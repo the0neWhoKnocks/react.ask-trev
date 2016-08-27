@@ -3,13 +3,15 @@ import { Link } from 'react-router';
 import { emptyFn, generateHash } from '../utils.js';
 
 import css from '../styles/QAListItem.styl';
+import Button from './Button.js';
 
 export default class QAListItem extends React.Component {
   constructor(props){
     super();
     
     this.state = {
-      readOnly: true,
+      readOnly: (props.isNew) ? false : true,
+      date: props.date,
       itemHasError: false,
       title: props.title,
       titleHasError: false,
@@ -22,6 +24,18 @@ export default class QAListItem extends React.Component {
       IS_READONLY: 'is--readonly',
       IS_INVALID: 'qa-list-item--is--invalid',
       HAS_ERROR: 'has--error'
+    };
+  }
+  
+  static get propTypes() {
+    return {
+      isNew: React.PropTypes.bool
+    };
+  }
+  
+  static get defaultProps() {
+    return {
+      isNew: false
     };
   }
   
@@ -74,7 +88,8 @@ export default class QAListItem extends React.Component {
     const state = {
       readOnly: true,
       savedTitle: title,
-      savedBody: this.refs.bodyInput.value
+      savedBody: this.refs.bodyInput.value,
+      date: ''+ Date.now()
     };
     
     ev.currentTarget.blur();
@@ -93,7 +108,8 @@ export default class QAListItem extends React.Component {
       title !== this.state.savedTitle
       || body !== this.state.savedBody
     ){
-      const data = {
+      const itemData = {
+        date: state.date,
         id: hash,
         title: title,
         body: body
@@ -101,7 +117,8 @@ export default class QAListItem extends React.Component {
       state.savedTitle = title;
       state.savedBody = body;
       
-      console.log('[ SAVE ]', data);
+      console.log('[ SAVE ]', itemData);
+      this.props.itemSave(itemData);
       // TODO - replace old id with new hash in props.ids
       // TODO - trigger action to update item
       // TODO - make new endpoint to handle updating individual items
@@ -134,6 +151,12 @@ export default class QAListItem extends React.Component {
     }
   }
   
+  componentDidMount(){
+    if( this.props.isNew ){
+      this.refs.titleInput.focus();
+    }      
+  }
+  
   render(){
     const readOnly = ( this.state.readOnly ) ? this.cssModifiers.IS_READONLY : '';
     const titleError = ( this.state.titleHasError ) ? this.cssModifiers.IS_INVALID : '';
@@ -150,12 +173,15 @@ export default class QAListItem extends React.Component {
     };
     let btn1Props = {};
     let btn2Props = {};
+    let disabled = '';
     
     if( this.state.readOnly ){
       titleInputProps.value = this.state.title;
       titleInputProps.onChange = emptyFn;
+      titleInputProps.disabled = 'disabled';
       bodyInputProps.value = this.state.body;
       bodyInputProps.onChange = emptyFn;
+      bodyInputProps.disabled = 'disabled';
       btn1Props.handler = this.handleItemEdit.bind(this);
       btn1Props.label = 'Edit';
       btn2Props.handler = this.handleItemDelete.bind(this);
@@ -164,9 +190,11 @@ export default class QAListItem extends React.Component {
       titleInputProps.value = this.state.title;
       titleInputProps.onChange = this.handleTitleChange.bind(this);
       titleInputProps.onKeyPress = this.handleInputKeys.bind(this);
+      titleInputProps.disabled = '';
       bodyInputProps.value = this.state.body;
       bodyInputProps.onChange = this.handleBodyChange.bind(this);
       bodyInputProps.onKeyPress = this.handleInputKeys.bind(this);
+      bodyInputProps.disabled = '';
       btn1Props.handler = this.handleItemSave.bind(this);
       btn1Props.label = 'Save';
       btn2Props.handler = this.handleItemCancel.bind(this);
@@ -176,21 +204,19 @@ export default class QAListItem extends React.Component {
     return (
       <li className={itemClass}>
         <div className="qa-list-item__container">
-          <textarea {...titleInputProps} />
-          <textarea {...bodyInputProps} />
+          <textarea ref="titleInput" placeholder="Title" {...titleInputProps} />
+          <textarea placeholder="Body text" {...bodyInputProps} />
           <div className={`qa-list-item__error ${errorClass}`}>{this.state.errorMsg}</div>
         </div>
         <nav className="qa-list-item__nav">
-          <button 
-            type="button" 
+          <Button 
             className="qa-list-item__nav-btn"
             onClick={btn1Props.handler}
-          >{btn1Props.label}</button>
-          <button 
-            type="button" 
+          >{btn1Props.label}</Button>
+          <Button
             className="qa-list-item__nav-btn"
             onClick={btn2Props.handler}
-          >{btn2Props.label}</button>
+          >{btn2Props.label}</Button>
         </nav>
       </li>
     );

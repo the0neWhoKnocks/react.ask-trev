@@ -15,7 +15,7 @@ export default class ResultsList extends React.Component {
     let resultsMarkup = '';
     const { query, results } = this.props;
     
-    switch(this.props.status){
+    switch(this.props.resultsStatus){
       case 'error' :
         resultsMessage.__html = `No results found for &quot;${query}&quot;`;
         break;
