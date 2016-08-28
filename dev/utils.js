@@ -1,3 +1,5 @@
+import endpoints from './endpoints.js';
+
 module.exports = {
   emptyFn: function(){},
   
@@ -13,5 +15,32 @@ module.exports = {
     }
     
     return ''+hash;
+  },
+  
+  saveData: function(data){
+    const jsonData = JSON.stringify(data);
+    const req = new Request(endpoints.SAVE_LOCAL_DATA, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: jsonData
+    });
+      
+    console.log('[ SAVING ]', jsonData);
+      
+    fetch(req)
+      .then(function(resp){
+        resp.json().then(function(data){
+          if(resp.status !== 200 ){
+            console.error(data.msg, "\n"+data.err);
+          }else{
+            console.log(data.msg);
+          }
+        });
+      })
+      .catch(function(err){
+        console.error('[ ERROR ]', err);
+      });
   }
 };

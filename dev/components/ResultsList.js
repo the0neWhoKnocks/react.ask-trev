@@ -21,12 +21,16 @@ export default class ResultsList extends React.Component {
         break;
       
       case 'success' :
-        resultsMessage.__html = `Results for <span className="results-list__query">&quot;${query}&quot;</span>`;
-        resultsMarkup = (
-          <ul className="results-list__items">
-            {results.map(this.renderResult, this)}
-          </ul>
-        );
+        if( results.length ){
+          resultsMessage.__html = `Results for <span className="results-list__query">&quot;${query}&quot;</span>`;
+          resultsMarkup = (
+            <ul className="results-list__items">
+              {results.map(this.renderResult, this)}
+            </ul>
+          );
+        }else{
+          resultsMessage.__html = `No results found for &quot;${query}&quot;`;
+        }
         break;
     }
     

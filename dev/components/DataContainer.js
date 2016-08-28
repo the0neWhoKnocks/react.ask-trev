@@ -1,5 +1,5 @@
 import React from 'react';
-import endpoints from '../endpoints.js';
+import { saveData } from '../utils.js';
 
 export default class DataContainer extends React.Component {
   static get defaultProps(){
@@ -16,29 +16,7 @@ export default class DataContainer extends React.Component {
   saveLocalData(data){
     // only try to save if the data wasn't already loaded locally
     if( !/^\/data/.test(this.props.dataSource) ){
-      const req = new Request(endpoints.SAVE_LOCAL_DATA, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      });
-      
-      console.log('[ SAVING ] local data');
-      
-      fetch(req)
-        .then(function(resp){
-          resp.json().then(function(data){
-            if(resp.status !== 200 ){
-              console.error(data.msg, "\n"+data.err);
-            }else{
-              console.log(data.msg);
-            }
-          });
-        })
-        .catch(function(err){
-          console.error('[ ERROR ]', err);
-        });
+      saveData(data);
     }
   }
   

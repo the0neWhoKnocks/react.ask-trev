@@ -12,6 +12,7 @@ export default class QAListItem extends React.Component {
     this.state = {
       readOnly: (props.isNew) ? false : true,
       date: props.date,
+      id: props.id,
       itemHasError: false,
       title: props.title,
       titleHasError: false,
@@ -68,17 +69,23 @@ export default class QAListItem extends React.Component {
     });
   }
   
+  handleStateChangeOnEdit(){
+    this.refs.titleInput.focus();
+  }
+  
   handleItemEdit(ev){
     ev.currentTarget.blur();
     
     this.setState({
       readOnly: false
-    });
+    }, this.handleStateChangeOnEdit.bind(this));
   }
   
   handleItemDelete(ev){
     ev.currentTarget.blur();
-    alert('delete item');
+    
+    console.log('[ DELETE ]', `"${this.state.id}" - "${this.state.savedTitle}"`);
+    this.props.itemDelete(this.state.id);
   }
   
   handleItemSave(ev){
@@ -89,7 +96,8 @@ export default class QAListItem extends React.Component {
       readOnly: true,
       savedTitle: title,
       savedBody: this.refs.bodyInput.value,
-      date: ''+ Date.now()
+      date: ''+ Date.now(),
+      id: hash
     };
     
     ev.currentTarget.blur();
@@ -117,12 +125,13 @@ export default class QAListItem extends React.Component {
       state.savedTitle = title;
       state.savedBody = body;
       
-      console.log('[ SAVE ]', itemData);
-      this.props.itemSave(itemData);
-      // TODO - replace old id with new hash in props.ids
-      // TODO - trigger action to update item
-      // TODO - make new endpoint to handle updating individual items
-      alert('save item');
+      if( this.props.isNew ){        
+        console.log('[ SAVE ]', itemData);
+        this.props.itemSave(itemData);
+      }else{
+        console.log('[ UPDATE ]', itemData);
+        this.props.itemUpdate(itemData, this.state.id);
+      }
     }
     
     this.setState(state);
@@ -130,6 +139,10 @@ export default class QAListItem extends React.Component {
   
   handleItemCancel(ev){
     ev.currentTarget.blur();
+    
+    if( this.props.isNew ){
+      this.props.itemCancelCreate();
+    }
     
     this.setState({
       readOnly: true,

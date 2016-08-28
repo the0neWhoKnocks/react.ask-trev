@@ -1,10 +1,31 @@
 $namespace = ".qa-nav";
 $margin = 2em;
-$col_primary = #eee;
+$bWidth = 0.2em;
+$col_primary = #ddd;
 
 {$namespace} {
   text-align: right;
-  background: $col_primary;
+  padding: $bWidth;
+  border-radius: 0.5em;
+  background-image: linear-gradient(to top, lighten($col_primary, 10%) 0%, darken($col_primary, 40%) 100%);
+  position: relative;
+  
+  &::before {
+    content: '';
+    border-radius: ($bWidth + 0.2);
+    background: lighten($col_primary, 30%);
+    position: absolute;
+    top: $bWidth;
+    left: $bWidth;
+    bottom: $bWidth;
+    right: $bWidth;
+    z-index: 0;
+  }
+  
+  & > * {
+    position: relative;
+    z-index: 1;
+  }
   
   &.is--top,
   &.is--btm {
@@ -17,5 +38,9 @@ $col_primary = #eee;
   
   &.is--btm {
     margin-top: $margin;
+  }
+  
+  &__btn {
+    text-align: left;
   }
 }

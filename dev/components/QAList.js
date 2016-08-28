@@ -47,10 +47,16 @@ export default class QAList extends React.Component {
           );
         }
         
+        // sort the results by newest
+        let sortedResults = results.slice(0);
+        sortedResults = sortedResults.sort(function(a, b){
+          return +b.date - +a.date;
+        }, this);
+        
         resultsMarkup = (
           <ul className="qa-list__items">
             {createMarkup}
-            {results.map(this.renderResult, this)}
+            {sortedResults.map(this.renderResult, this)}
           </ul>
         );
         break;
@@ -60,7 +66,7 @@ export default class QAList extends React.Component {
       <div className="qa-list">
         <QANav pos="top" {...this.props} />
         {resultsMarkup}
-        <QANav pos="btm" {...this.props} />
+        {/* <QANav pos="btm" {...this.props} /> */}
       </div>
     );
   }
