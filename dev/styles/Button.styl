@@ -1,22 +1,43 @@
 $namespace = ".btn";
 $col_primary = #ddd;
-$col_primary_hov = #eee;
+$col_text = #444;
 $padding_vert = 0.5em;
-$padding_horz = 1em;
+$padding_horz = 0.75em;
 
 {$namespace} {
+  color: $col_text;
   text-transform: uppercase;
   padding: $padding_vert $padding_horz;
   border: solid 1px;
+  border-radius: 0.35em;
+  overflow: hidden;
   cursor: pointer;
   background: $col_primary;
+  position: relative;
+  
+  &::after {
+    content: '';
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.8) 0%, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 0.3) 85%, rgba(0, 0, 0, 0) 100%);
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
   
   &:hover {
-    background: $col_primary_hov;
+    background: lighten($col_primary, 75%);
   }
   
   &__icon {
     display: none;
+  }
+  
+  &__body {
+    font-weight: bold;
+    text-align: center;
+    padding: $padding_vert $padding_horz;
+    text-shadow: 0px 2px 0px #fff;
   }
   
   &.has--icon {
@@ -26,14 +47,16 @@ $padding_horz = 1em;
       &__icon,
       &__body {
         display: inline-block;
+        vertical-align: middle;
       }
       
       &__icon {
-        padding: $padding_vert $padding_vert $padding_vert $padding_horz;
-      }
-      
-      &__body {
-        padding: $padding_vert $padding_horz $padding_vert 0;
+        color: #eee;
+        font-size: 1.75em;
+        line-height: 0.3em;
+        text-align: center;
+        padding: $padding_vert ($padding_horz / 2);
+        background: rgba(0, 0, 0, 0.35);
       }
     }
   }

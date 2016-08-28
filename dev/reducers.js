@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
+import { saveData } from './utils.js';
 
 import resultsData from '../public/data.json';
 
@@ -51,6 +52,7 @@ function query(state = defaultState.query, action){
 
 function results(state = defaultState.results, action){
   const logPrefix = '[ REDUCER results ]';
+  let results, ndx, i;
   
   switch(action.type){
     case 'DATA_SUCCESS' :
@@ -58,8 +60,55 @@ function results(state = defaultState.results, action){
       return action.results;
       
     case 'ITEM_SAVE' :
-      let results = state.slice(0);
+      results = state.slice(0);
       results.push(action.item);
+      
+      saveData({
+        results: results
+      });
+      
+      console.log(logPrefix, results);
+      return results;
+    
+    case 'ITEM_UPDATE' :
+      results = state.slice(0);
+      
+      // find old item, and update it
+      for(i=0; i<results.length; i++){
+        let item = results[i];
+        
+        if( item.id === action.id ){
+          ndx = i;
+          break;
+        }
+      };
+      
+      results[ndx] = action.item;
+      
+      saveData({
+        results: results
+      });
+      
+      console.log(logPrefix, results);
+      return results;
+    
+    case 'ITEM_DELETE' :
+      results = state.slice(0);
+      
+      for(i=0; i<results.length; i++){
+        let item = results[i];
+        
+        if( item.id === action.id ){
+          ndx = i;
+          break;
+        }
+      };
+      
+      results.splice(ndx, 1);
+      
+      saveData({
+        results: results
+      });
       
       console.log(logPrefix, results);
       return results;
