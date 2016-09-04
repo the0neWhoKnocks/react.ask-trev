@@ -1,4 +1,5 @@
 import React from 'react';
+import { db } from '../database.js';
 import { saveData } from '../utils.js';
 
 export default class DataContainer extends React.Component {
@@ -14,8 +15,15 @@ export default class DataContainer extends React.Component {
    * @param {object} data - The response data.
    */
   saveLocalData(data){
-    // only try to save if the data wasn't already loaded locally
-    if( !/^\/data/.test(this.props.dataSource) ){
+    // TODO - this is hacky
+    const dataIsSame = JSON.stringify(data) === JSON.stringify({results:this.props.results});
+    
+    if( 
+      // only try to save if the data wasn't already loaded locally
+      !/^\/data/.test(this.props.dataSource)
+      // or the data is not the same
+      || !dataIsSame
+    ){
       saveData(data);
     }
   }
@@ -28,39 +36,33 @@ export default class DataContainer extends React.Component {
       query !== null 
       && query !== ''
       || this.props.noFilter
-    ){
-      const req = new Request(this.props.dataSource);
-        
+    ){  
       this.props.dataLoading();
       
-      fetch(req)
-        .then(function(resp){
-          if(resp.status !== 200 ){
-            console.error('[ ERROR ]', resp.status, "Couldn't retrieve data.");
-            _self.props.dataError();
+      const resultsRef = db.child('results');
+      resultsRef.on('value', snap => {
+        const results = snap.val();
+        let items = [];
+        
+        for(let id in results){
+          const result = results[id];
+          
+          if( query && (new RegExp(query, 'i')).test(result.title) ){                
+            items.push(result);
+          }else if( _self.props.noFilter ){
+            items.push(result);
           }
-
-          resp.json().then(function(data){
-            let items = [];
-            
-            for(let i=0; i<data.results.length; i++){
-              const result = data.results[i];
-              
-              if( query && (new RegExp(query, 'i')).test(result.title) ){                
-                items.push(result);
-              }else if( _self.props.noFilter ){
-                items.push(result);
-              }
-            }
-            
-            _self.props.dataSuccess(items);
-            _self.saveLocalData(data);
-          });
-        })
-        .catch(function(err){
-          console.error('[ ERROR ]', err);
-          _self.props.dataError();
+        }
+        
+        if( !_self.props.noFilter ){
+          _self.props.dataFiltered(items);
+        }
+        
+        _self.props.dataSuccess(results);
+        _self.saveLocalData({
+          results: results
         });
+      });
     }else if( query === '' ){
       console.warn('[ WARN ] No query entered');
       _self.props.dataError();

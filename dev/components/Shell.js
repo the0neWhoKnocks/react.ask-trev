@@ -4,8 +4,8 @@ import css from '../styles/base.styl';
 import AdminNav from './AdminNav.js';
 
 export let themes = {
-  DEFAULT: 'default',
-  DARK: 'dark'
+  DEFAULT: 'has--default-theme',
+  DARK: 'has--dark-theme'
 };
 
 export class Shell extends React.Component {
@@ -16,10 +16,21 @@ export class Shell extends React.Component {
   }
   
   render() {
+    let overlayProps = {
+      className: 'overlay'
+    };
+    
+    switch(this.props.resultsStatus){  
+      case 'processing' :
+        overlayProps.className = overlayProps.className +' is--processing';
+        break;
+    }
+    
     return (
-      <div className={this.props.theme}>
+      <div className={'shell '+ this.props.theme}>
         <AdminNav {...this.props} />
         {React.cloneElement(this.props.children, this.props)}
+        <div {...overlayProps} />
       </div>
     );
   }

@@ -8,13 +8,30 @@
     margin: 0;
   }
   
-  &__home-link {
-    color: #eee;
-    text-decoration: none;
-    padding: 0.25em;
-    display: inline-block;
+  &__btns {
     position: absolute;
     top: 0.5em;
     right: 0.5em;
+  }
+  
+  &__btn {
+    color: #eee;
+    text-decoration: none;
+    padding: 0.25em 1em;
+    border: 0;
+    background: transparent;
+    display: inline-block;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    &:last-child {
+      padding-right: 0.25em;
+    }
+    
+    &:not(:nth-child(1)) {
+      border-left: solid 1px;
+    }
   }
 }

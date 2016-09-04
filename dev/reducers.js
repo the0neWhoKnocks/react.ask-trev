@@ -1,19 +1,32 @@
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
-import { saveData } from './utils.js';
+import { db } from './database.js';
+import { saveData, objToArray } from './utils.js';
 
 import resultsData from '../public/data.json';
+
+const resultsRef = db.child('results');
+export const userStatuses = {
+  LOGGED_IN: 'loggedIn',
+  LOGGED_OUT: 'loggedOut',
+  LOGIN_FAILURE: 'loginFailure',
+  LOGIN_PENDING: 'loginPending',
+  CHECKING: 'checking'
+};
 
 function getAutoCompleteVals({title}){
   return title;
 }
 
 export const defaultState = {
-  autoComplete: resultsData.results.map(getAutoCompleteVals),
+  autoComplete: objToArray(resultsData.results).map(getAutoCompleteVals),
   query: '',
-  results: [],
+  results: {},
+  filteredResults: {},
   resultsStatus: 'loading',
-  createItem: false
+  createItem: false,
+  userStatus: userStatuses.LOGGED_OUT,
+  errorMessage: ''
 };
 
 /**
@@ -33,11 +46,11 @@ export function mapStateToProps(state, ownProps){
 }
 
 
-function autoComplete(state = defaultState.autoComplete, action){
+function autoComplete(state = defaultState.autoComplete, action = {}){
   return state;
 }
 
-function query(state = defaultState.query, action){
+function query(state = defaultState.query, action = {}){
   const logPrefix = '[ REDUCER query ]';
   
   switch(action.type){
@@ -50,81 +63,87 @@ function query(state = defaultState.query, action){
   }
 }
 
-function results(state = defaultState.results, action){
+function results(state = defaultState.results, action = {}){
   const logPrefix = '[ REDUCER results ]';
-  let results, ndx, i;
+  let newResults, ndx, i;
   
   switch(action.type){
     case 'DATA_SUCCESS' :
+    case 'DATA_DONE_PROCESSING' :
       console.log(logPrefix, action.results);
       return action.results;
       
     case 'ITEM_SAVE' :
-      results = state.slice(0);
-      results.push(action.item);
+      newResults = JSON.parse(JSON.stringify(state));
+      newResults[action.id] = action.item;
       
       saveData({
-        results: results
+        results: newResults
+      }, function(){
+        if( action.callback ) action.callback(newResults);
       });
       
-      console.log(logPrefix, results);
-      return results;
+      return state;
     
     case 'ITEM_UPDATE' :
-      results = state.slice(0);
-      
-      // find old item, and update it
-      for(i=0; i<results.length; i++){
-        let item = results[i];
-        
-        if( item.id === action.id ){
-          ndx = i;
-          break;
-        }
-      };
-      
-      results[ndx] = action.item;
+      newResults = JSON.parse(JSON.stringify(state));
+      delete newResults[action.oldId];
+      newResults[action.id] = action.item;
       
       saveData({
-        results: results
+        results: newResults
+      }, function(){
+        if( action.callback ) action.callback(newResults);
       });
       
-      console.log(logPrefix, results);
-      return results;
+      return state;
     
     case 'ITEM_DELETE' :
-      results = state.slice(0);
-      
-      for(i=0; i<results.length; i++){
-        let item = results[i];
-        
-        if( item.id === action.id ){
-          ndx = i;
-          break;
-        }
-      };
-      
-      results.splice(ndx, 1);
+      newResults = JSON.parse(JSON.stringify(state));
+      delete newResults[action.id];
       
       saveData({
-        results: results
+        results: newResults
+      }, function(){
+        if( action.callback ) action.callback(newResults);
       });
       
-      console.log(logPrefix, results);
-      return results;
+      return state;
       
     default :
       return state;
   }
 }
 
-function resultsStatus(state = defaultState.resultsStatus, action){
+function filteredResults(state = defaultState.filteredResults, action = {}){
+  const logPrefix = '[ REDUCER filteredResults ]';
+  let results, ndx, i;
+  
+  switch(action.type){
+    case 'DATA_FILTERED' :
+      console.log(logPrefix, action.filteredResults);
+      return action.filteredResults;
+      
+    default :
+      return state;
+  }
+}
+
+function resultsStatus(state = defaultState.resultsStatus, action = {}){
   const logPrefix = '[ REDUCER resultsStatus ]';
   
   switch(action.type){
     case 'DATA_LOADING' :
       console.log(logPrefix, 'loading');
       return 'loading';
+    
+    case 'DATA_PROCESSING' :
+      console.log(logPrefix, 'processing');
+      return 'processing';
+    
+    case 'DATA_DONE_PROCESSING' :
+      console.log(logPrefix, 'done');
+      return 'done';
     
     case 'DATA_SUCCESS' :
       console.log(logPrefix, 'success');
@@ -139,7 +158,7 @@ function resultsStatus(state = defaultState.resultsStatus, action){
   }
 }
 
-function createItem(state = defaultState.createItem, action){
+function createItem(state = defaultState.createItem, action = {}){
   const logPrefix = '[ REDUCER createItem ]';
   
   switch(action.type){
@@ -157,12 +176,57 @@ function createItem(state = defaultState.createItem, action){
   }
 }
 
+function userStatus(state = defaultState.userStatus, action = {}){
+  const logPrefix = '[ REDUCER userStatus ]';
+  
+  switch(action.type){
+    case 'LOGIN_PENDING' :
+      console.log(logPrefix, userStatuses.LOGIN_PENDING);
+      return userStatuses.LOGIN_PENDING;
+    
+    case 'LOGIN_SUCCESS' :
+      console.log(logPrefix, userStatuses.LOGGED_IN);
+      return userStatuses.LOGGED_IN;
+    
+    case 'LOGIN_FAILURE' :
+      console.log(logPrefix, userStatuses.LOGIN_FAILURE);
+      return userStatuses.LOGIN_FAILURE;
+    
+    case 'LOGGED_OUT' :
+      console.log(logPrefix, userStatuses.LOGGED_OUT);
+      return userStatuses.LOGGED_OUT;
+      
+    default :
+      return state;
+  }
+}
+
+function errorMessage(state = defaultState.errorMessage, action = {}){
+  const logPrefix = '[ REDUCER errorMessage ]';
+  
+  switch(action.type){
+    case 'SET_ERROR_MESSAGE' :
+      if( action.msg === '' ){        
+        console.log(logPrefix, action.msg);
+      }else{
+        console.error(logPrefix, action.msg);
+      }
+      return action.msg;
+      
+    default :
+      return state;
+  }
+}
+
 const reducers = combineReducers({
   autoComplete,
   query,
   results,
+  filteredResults,
   resultsStatus,
   createItem,
+  userStatus,
+  errorMessage,
   routing: routerReducer
 });
 
