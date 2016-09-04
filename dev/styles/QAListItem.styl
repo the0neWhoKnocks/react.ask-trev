@@ -1,6 +1,7 @@
 $namespace = ".qa-list-item";
 $col_errorPrime = #f9c6d3;
 $col_errorSecond = #8c0c0c;
+$vert_spacing = 1em;
 
 {$namespace} {
   width: 100%;
@@ -18,7 +19,6 @@ $col_errorSecond = #8c0c0c;
   }
   
   &__container {
-    min-width: 300px;
     padding: 1em;
   }
   
@@ -65,15 +65,11 @@ $col_errorSecond = #8c0c0c;
     margin-top: 0;
   }
   
-  &__body {
-    margin-top: 1em;
-  }
-  
   &__error {
     color: $col_errorSecond;
     font-weight: bold;
     padding: 0.5em;
-    margin-top: 1em;
+    margin-top: $vert_spacing;
     background: $col_errorPrime;
     display: none;
     
@@ -81,11 +77,58 @@ $col_errorSecond = #8c0c0c;
       display: block;
     }
   }
+  
+  &__expander {
+    position: relative;
+    
+    &.is--for-body {
+      margin-top: $vert_spacing;
+    }
+    
+    .is--pre,
+    .is--textarea {
+      min-height: 1.65em;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    
+    .is--textarea {
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      overflow: hidden;
+      position: absolute;
+      top: 0;
+      left: 0;
+      resize: none;
+    }
+    
+    .is--pre {
+      border: 0;
+      margin: 0;
+      display: block;
+      visibility: hidden; // Hide the text; just using it for sizing
+    }
+  }
 }
 
 {$namespace}--is--invalid {
   outline-color: $col_errorSecond;
   animation: shake .5s linear;
+}
+
+@media (max-width: 500px) {
+  {$namespace} {
+    
+    &__container,
+    &__nav {
+      display: block;
+    }
+    
+    &__nav {
+      width: 100%;
+    }
+  }
 }
 
 @keyframes shake {

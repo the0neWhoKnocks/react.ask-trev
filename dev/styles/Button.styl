@@ -28,6 +28,14 @@ $padding_horz = 0.75em;
   &:hover {
     background: lighten($col_primary, 75%);
   }
+
+  &:disabled {
+    opacity: 0.5;
+
+    &:hover {
+      background: $col_primary;
+    }
+  }
   
   &__icon {
     display: none;

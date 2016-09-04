@@ -13,7 +13,7 @@ export default class ResultsList extends React.Component {
       __html: 'Loading Results'
     };
     let resultsMarkup = '';
-    const { query, results } = this.props;
+    const { query, filteredResults } = this.props;
     
     switch(this.props.resultsStatus){
       case 'error' :
@@ -21,11 +21,11 @@ export default class ResultsList extends React.Component {
         break;
       
       case 'success' :
-        if( results.length ){
+        if( filteredResults.length ){
           resultsMessage.__html = `Results for <span className="results-list__query">&quot;${query}&quot;</span>`;
           resultsMarkup = (
             <ul className="results-list__items">
-              {results.map(this.renderResult, this)}
+              {filteredResults.map(this.renderResult, this)}
             </ul>
           );
         }else{

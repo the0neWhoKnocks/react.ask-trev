@@ -85,7 +85,10 @@ export default class QAListItem extends React.Component {
     ev.currentTarget.blur();
     
     console.log('[ DELETE ]', `"${this.state.id}" - "${this.state.savedTitle}"`);
-    this.props.itemDelete(this.state.id);
+    this.props.dataProcessing();
+    this.props.itemDelete(this.state.id, function(results){
+      this.props.dataDoneProcessing(results);
+    }.bind(this));
   }
   
   handleItemSave(ev){
@@ -118,7 +121,6 @@ export default class QAListItem extends React.Component {
     ){
       const itemData = {
         date: state.date,
-        id: hash,
         title: title,
         body: body
       };
@@ -127,10 +129,18 @@ export default class QAListItem extends React.Component {
       
       if( this.props.isNew ){        
         console.log('[ SAVE ]', itemData);
-        this.props.itemSave(itemData);
+        
+        this.props.dataProcessing();
+        this.props.itemSave(itemData, state.id, function(results){
+          this.props.dataDoneProcessing(results);
+        }.bind(this));
       }else{
         console.log('[ UPDATE ]', itemData);
-        this.props.itemUpdate(itemData, this.state.id);
+        
+        this.props.dataProcessing();
+        this.props.itemUpdate(itemData, state.id, this.state.id, function(results){
+          this.props.dataDoneProcessing(results);
+        }.bind(this));
       }
     }
     
@@ -164,6 +174,10 @@ export default class QAListItem extends React.Component {
     }
   }
   
+  handleBodyInput(ev){
+    this.refs.bodyInputMirror.textContent = this.refs.bodyInput.value;
+  }
+  
   componentDidMount(){
     if( this.props.isNew ){
       this.refs.titleInput.focus();
@@ -181,8 +195,9 @@ export default class QAListItem extends React.Component {
       ref: 'titleInput'
     };
     let bodyInputProps = {
-      className: `qa-list-item__body ${readOnly}`,
-      ref: 'bodyInput'
+      className: `qa-list-item__body is--textarea ${readOnly}`,
+      ref: 'bodyInput',
+      onInput: this.handleBodyInput.bind(this)
     };
     let btn1Props = {};
     let btn2Props = {};
@@ -218,7 +233,12 @@ export default class QAListItem extends React.Component {
       <li className={itemClass}>
         <div className="qa-list-item__container">
           <textarea ref="titleInput" placeholder="Title" {...titleInputProps} />
-          <textarea placeholder="Body text" {...bodyInputProps} />
+          <div className="qa-list-item__expander is--for-body">
+            <pre className="is--pre">
+              <span ref="bodyInputMirror">{this.state.body}</span>
+            </pre>
+            <textarea placeholder="Body text" {...bodyInputProps} />
+          </div>
           <div className={`qa-list-item__error ${errorClass}`}>{this.state.errorMsg}</div>
         </div>
         <nav className="qa-list-item__nav">

@@ -1,5 +1,5 @@
 import React from 'react';
-import { generateHash } from '../utils.js';
+import { generateHash, objToArray } from '../utils.js';
 
 import css from '../styles/QAList.styl';
 import QANav from './QANav.js';
@@ -13,22 +13,24 @@ export default class QAList extends React.Component {
   }
   
   render(){
+    const { query, results } = this.props;
     let resultsMessage = {
       __html: 'Loading Results'
     };
     let resultsMarkup = '';
     let createMarkup = '';
-    const { query, results } = this.props;
     
     switch(this.props.resultsStatus){
       case 'error' :
         console.error("Couldn't load results");
         break;
       
+      case 'done' :
+      case 'processing' :
       case 'success' :
-        this.ids = results.map(function(item){
-          return item.id;
-        });
+        for(let i in results){
+          this.ids.push(i);
+        }
         
         if( this.props.createItem ){
           const hash = generateHash('__Creating__');
@@ -48,7 +50,7 @@ export default class QAList extends React.Component {
         }
         
         // sort the results by newest
-        let sortedResults = results.slice(0);
+        let sortedResults = objToArray(results, true).slice(0);
         sortedResults = sortedResults.sort(function(a, b){
           return +b.date - +a.date;
         }, this);
@@ -71,11 +73,11 @@ export default class QAList extends React.Component {
     );
   }
   
-  renderResult({title, body, id, date}, ndx){
+  renderResult({title, body, _id, date}, ndx){
     return (
       <QAListItem
-        key={id}
-        id={id}
+        key={_id}
+        id={_id}
         ids={this.ids}
         title={title}
         body={body}
