@@ -1,6 +1,6 @@
 import React from 'react';
 import { generateHash, objToArray } from '../utils.js';
-
+import { db } from '../database.js';
 import css from '../styles/QAList.styl';
 import QANav from './QANav.js';
 import QAListItem from './QAListItem.js';
@@ -10,8 +10,17 @@ export default class QAList extends React.Component {
     super(props);
     
     this.ids = [];
+    this.logPrefix = '[ QAList ]';
   }
-  
+
+  componentDidMount(){
+    this.resultsRef = db.child('results');
+    this.resultsRef.on('value', function(snapshot){
+      console.log(this.logPrefix, 'Results updated');
+      this.props.dataSuccess(snapshot.val());
+    }.bind(this));
+  }
+
   render(){
     const { query, results } = this.props;
     let resultsMessage = {
@@ -28,6 +37,7 @@ export default class QAList extends React.Component {
       case 'done' :
       case 'processing' :
       case 'success' :
+        this.ids = [];
         for(let i in results){
           this.ids.push(i);
         }

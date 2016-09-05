@@ -31,13 +31,6 @@ export function dataSuccess(results){
   }
 }
 
-export function dataFiltered(filteredResults){
-  return {
-    type: 'DATA_FILTERED',
-    filteredResults
-  }
-}
-
 export function dataError(){
   return {
     type: 'DATA_ERROR'

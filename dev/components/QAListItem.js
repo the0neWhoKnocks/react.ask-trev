@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
+import { db, authState } from '../database.js';
 import { emptyFn, generateHash } from '../utils.js';
-
 import css from '../styles/QAListItem.styl';
 import Button from './Button.js';
 
@@ -39,7 +39,7 @@ export default class QAListItem extends React.Component {
       isNew: false
     };
   }
-  
+
   addErrorState(elName, msg){
     const _self = this;
     let obj = {};
@@ -85,10 +85,9 @@ export default class QAListItem extends React.Component {
     ev.currentTarget.blur();
     
     console.log('[ DELETE ]', `"${this.state.id}" - "${this.state.savedTitle}"`);
+
     this.props.dataProcessing();
-    this.props.itemDelete(this.state.id, function(results){
-      this.props.dataDoneProcessing(results);
-    }.bind(this));
+    db.child(`results/${this.state.id}`).remove();
   }
   
   handleItemSave(ev){
@@ -129,18 +128,19 @@ export default class QAListItem extends React.Component {
       
       if( this.props.isNew ){        
         console.log('[ SAVE ]', itemData);
-        
+
         this.props.dataProcessing();
-        this.props.itemSave(itemData, state.id, function(results){
-          this.props.dataDoneProcessing(results);
-        }.bind(this));
+        this.props.itemSave(itemData, state.id);
+        db.child(`results/${state.id}`).set(itemData);
       }else{
+        const newId = state.id;
+        const oldId = this.state.id;
+
         console.log('[ UPDATE ]', itemData);
         
         this.props.dataProcessing();
-        this.props.itemUpdate(itemData, state.id, this.state.id, function(results){
-          this.props.dataDoneProcessing(results);
-        }.bind(this));
+        db.child(`results/${newId}`).set(itemData);
+        db.child(`results/${oldId}`).remove();
       }
     }
     

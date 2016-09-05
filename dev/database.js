@@ -38,6 +38,11 @@ module.exports = {
    *
    * @param {function} callback - The function that'll be called every time the data changes.
    * @returns {function} - The `unsubscribe` method.
+   * @example
+   * const removeStateListener = authState(function(data){
+   *   removeStateListener();
+   *   // manipulate data here
+   * });
    */
   authState: function(callback){
     return auth.onAuthStateChanged(function(data){

@@ -1,19 +1,45 @@
 import React from 'react';
-
+import { db } from '../database.js';
 import css from '../styles/ResultsList.styl';
 import ResultsListItem from './ResultsListItem.js';
 
 export default class ResultsList extends React.Component {
   constructor(props) {
     super(props);
+
+    this.logPrefix = '[ ResultsList ]';
   }
-  
+
+  filterResults(results){
+    const { query } = this.props;
+    let items = [];
+
+    for(let id in results){
+      const result = results[id];
+
+      if( query && (new RegExp(query, 'i')).test(result.title) ){
+        items.push(result);
+      }
+    }
+
+    return items;
+  }
+
+  componentDidMount(){
+    this.resultsRef = db.child('results');
+    this.resultsRef.on('value', function(snapshot){
+      console.log(this.logPrefix, 'Results updated');
+      this.props.dataSuccess(snapshot.val());
+    }.bind(this));
+  }
+
   render(){
     let resultsMessage = {
       __html: 'Loading Results'
     };
     let resultsMarkup = '';
-    const { query, filteredResults } = this.props;
+    const { query } = this.props;
+    const filteredResults = this.filterResults(this.props.results);
     
     switch(this.props.resultsStatus){
       case 'error' :
