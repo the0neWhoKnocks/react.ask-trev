@@ -3,7 +3,6 @@ import { Link } from 'react-router';
 
 import { userStatuses } from '../reducers.js';
 import Login from './Login.js';
-import DataContainer from './DataContainer.js';
 import QAList from './QAList.js';
 
 export default class AdminPage extends React.Component {
@@ -13,11 +12,7 @@ export default class AdminPage extends React.Component {
     switch(this.props.userStatus){ 
       case userStatuses.LOGGED_IN :
         view = (
-          <DataContainer
-            {...this.props}
-            component={QAList}
-            noFilter={true}
-          />
+          <QAList {...this.props} />
         );
         break;
       
