@@ -17,6 +17,9 @@ const logPrefix = '[ DATABASE ]';
 const db = firebase.database();
 const auth = firebase.auth();
 
+function transformData(callback, snapshot){
+  callback(snapshot.val());
+}
 
 module.exports = {
   currUser: function(){
@@ -50,5 +53,15 @@ module.exports = {
     });
   },
 
-  db: db.ref()
+  db: db.ref(),
+
+  dataFrom: function(key, callback, once=false){
+    const ref = db.ref().child(key);
+
+    if( once ){
+      ref.once('value', transformData.bind(null, callback));
+    }else{
+      ref.on('value', transformData.bind(null, callback));
+    }
+  }
 };
