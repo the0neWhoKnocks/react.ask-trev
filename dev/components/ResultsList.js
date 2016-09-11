@@ -1,5 +1,5 @@
 import React from 'react';
-import { db } from '../database.js';
+import { dataFrom } from '../database.js';
 import css from '../styles/ResultsList.styl';
 import ResultsListItem from './ResultsListItem.js';
 
@@ -26,10 +26,9 @@ export default class ResultsList extends React.Component {
   }
 
   componentDidMount(){
-    this.resultsRef = db.child('results');
-    this.resultsRef.on('value', function(snapshot){
+    dataFrom('results', function(data){
       console.log(this.logPrefix, 'Results updated');
-      this.props.dataSuccess(snapshot.val());
+      this.props.dataSuccess(data);
     }.bind(this));
   }
 

@@ -29,14 +29,17 @@ $btnDims = 50px;
     background-color: #fff;
   }
 
-  &__input {
+  .is--search-container {
     width: "calc(100% - %s)" % $btnDims;
-    height: 48px;
-    padding: 0 0 0 16px;
-    border: medium none;
-    background: transparent;
-    display: block;
     float: left;
+
+    input {
+      height: 48px;
+      padding: 0 0 0 16px;
+      border: medium none;
+      background: transparent;
+      display: block;
+    }
   }
 
   &__btn {

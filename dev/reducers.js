@@ -1,10 +1,8 @@
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
-import { db } from './database.js';
-import { saveData, objToArray } from './utils.js';
+import { saveData } from './utils.js';
 import resultsData from '../public/data.json';
 
-const resultsRef = db.child('results');
 export const userStatuses = {
   LOGGED_IN: 'loggedIn',
   LOGGED_OUT: 'loggedOut',
@@ -13,12 +11,7 @@ export const userStatuses = {
   CHECKING: 'checking'
 };
 
-function getAutoCompleteVals({title}){
-  return title;
-}
-
 export const defaultState = {
-  autoComplete: objToArray(resultsData.results).map(getAutoCompleteVals),
   query: '',
   results: {},
   resultsStatus: 'loading',
@@ -41,11 +34,6 @@ export function mapStateToProps(state, ownProps){
   ) newState.query = ownProps.params.query;
   
   return newState;
-}
-
-
-function autoComplete(state = defaultState.autoComplete, action = {}){
-  return state;
 }
 
 function query(state = defaultState.query, action = {}){
@@ -203,7 +191,6 @@ function errorMessage(state = defaultState.errorMessage, action = {}){
 }
 
 const reducers = combineReducers({
-  autoComplete,
   query,
   results,
   resultsStatus,

@@ -22,6 +22,9 @@ export default class Button extends React.Component {
   render() {
     let elClass = 'btn';
     let { extraClasses, inlineIcon, ...filteredProps } = this.props;
+    let btnBody = ( filteredProps.className )
+      ? this.props.children
+      : (<div className="btn__body">{this.props.children}</div>);
     
     if( extraClasses !== '' ){
       elClass += ` ${extraClasses}`;
@@ -37,7 +40,7 @@ export default class Button extends React.Component {
     return (
       <button className={elClass} {...filteredProps}>
         {inlineIcon}
-        <div className="btn__body">{this.props.children}</div>
+        {btnBody}
       </button>
     );
   }

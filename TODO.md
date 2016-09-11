@@ -9,13 +9,13 @@
   - [ ] If online, load from Firebase
   - [ ] If offline, load from local DB
 - [X] Create admin that allows for managing questions/answers.
-  - [ ] view - login screen when you hit the `/admin` path
+  - [X] view - login screen when you hit the `/admin` path
     - [ ] in offline mode disable the admin path.
   - [X] view - list of current Q&A's
     - Has a **Create Q&A** button
     - Clicking on a Q&A opens the Create/Edit view
   - [X] view - Create/Edit
-  - [ ] Save to exterior DB if online
+  - [X] Save to exterior DB if online
   - [ ] Save to local DB if offline
     - [ ] Look into Service Workers for this
   - [ ] When loading data, do a diff with offline/online data. Set a date for
@@ -28,10 +28,10 @@
 - [ ] When loading results, change the magnifying glass in the search input to
 a loading spinner.
 - [ ] Change images to SVG's
-- [ ] Add autocomplete to Search input
+- [X] Add autocomplete to Search input
 - [X] Login view
 - [X] Admin nav checks is user is set
-- [ ] Add methods in database.js to normalize data calls, `db.dataFrom('results', function(data){});`
+- [X] Add methods in database.js to normalize data calls, `db.dataFrom('results', function(data){});`
 - Add responsiveness to components
   - [X] qalistitem
   - [X] search

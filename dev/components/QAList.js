@@ -1,6 +1,6 @@
 import React from 'react';
 import { generateHash, objToArray } from '../utils.js';
-import { db } from '../database.js';
+import { dataFrom } from '../database.js';
 import css from '../styles/QAList.styl';
 import QANav from './QANav.js';
 import QAListItem from './QAListItem.js';
@@ -14,10 +14,9 @@ export default class QAList extends React.Component {
   }
 
   componentDidMount(){
-    this.resultsRef = db.child('results');
-    this.resultsRef.on('value', function(snapshot){
+    dataFrom('results', function(data){
       console.log(this.logPrefix, 'Results updated');
-      this.props.dataSuccess(snapshot.val());
+      this.props.dataSuccess(data);
     }.bind(this));
   }
 
